@@ -1,0 +1,12 @@
+body {
+  height: 100vh;
+  font-family: "Lato", sans-serif;
+}
+
+.color-red {
+  color: #e35d6a;
+}
+
+.bg-red {
+  background-color: #e35d6a;
+}/*# sourceMappingURL=bootstrapCustom.css.map */
