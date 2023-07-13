@@ -70,25 +70,30 @@ if (die.getContext && turnVisuals.getContext) {
 
     const alarm = (message) => {
         let divis = document.createElement('div')
-        divis.style.fontSize = '2rem'
+        divis.style.fontSize = '30px'
+        divis.style.padding = '2vw'
+        divis.style.textAlign = 'center'
         divis.style.background = '#f8f9fa'
         divis.style.boxShadow = '10px'
         divis.style.border = '1px solid black'
         divis.style.borderRadius = '10px'
         divis.style.zIndex = '2'
-        divis.style.height = '40vh'
+        divis.style.height = '200px'
         divis.style.width = '40vw'
         divis.style.minWidth = '200px'
-        divis.style.position = 'absolute'
-        divis.style.top = '25%'
-        divis.style.left = '30%'
-        divis.innerHTML = message
+        divis.style.position = 'relative'
+        divis.style.top = '25vh'
+        divis.style.margin = 'auto'
+        divis.innerHTML = `${message} <br> <br>`
 
         let btn = document.createElement('button')
+        btn.style.margin = 'auto'
+        btn.style.fontSize = '20px'
+        btn.style.fontWeight = 'bold'
         btn.innerHTML = 'Fermer'
         btn.style.border = '0'
         btn.style.background = 'none'
-        btn.style.float = 'right'
+        btn.style.display = 'block'
         divis.appendChild(btn)
         btn.addEventListener('click', () => {
             document.body.removeChild(divis)
