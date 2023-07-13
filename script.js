@@ -78,6 +78,7 @@ if (die.getContext && turnVisuals.getContext) {
         divis.style.zIndex = '2'
         divis.style.height = '40vh'
         divis.style.width = '40vw'
+        divis.style.minWidth = '200px'
         divis.style.position = 'absolute'
         divis.style.top = '25%'
         divis.style.left = '30%'
