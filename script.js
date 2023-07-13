@@ -6,29 +6,69 @@ const currentScoreboard2 = document.getElementById('currentScore2')
 const scoreboard2 = document.getElementById('scoreTwo')
 const newGame = document.getElementById('newGame')
 const die = document.getElementById('die')
-const turnVisuals = document.getElementById('turnVisuals') //Initialisation des éléments
+const turnVisuals = document.getElementById('turnVisuals') 
+const bgOne = document.getElementById('bgP1')
+const bgTwo = document.getElementById('bgP2')
+const playOneWins = document.getElementById('playerOneWins')
+const playTwoWins = document.getElementById('playerTwoWins') //Initialisation des éléments
 
 let score1 = 0
 let score2 = 0
 let currentScore1 = 0
 let currentScore2 = 0 //Initialisation des scores
-let ongoingGame = false
 
 let ctx
 let ctxTurn //On initialise les ctx pour canvas
 if (die.getContext && turnVisuals.getContext) {
     ctx = die.getContext('2d')
-    ctxTurn = turnVisuals.getContext('2d')
-    const game = {
-        'player': 0
+    ctxTurn = turnVisuals.getContext('2d') //Les ctx
+
+    const game = { //Toutes les infos de notre jeu
+        'player': 0,
+        'ongoing': false,
+        'win': false,
+        'playerOneWins': 0,
+        'playerTwoWins': 0
     }
 
+    const winCheck = () => { // La fonction gérant une victoire
+        if (score1 >= 100) {
+            game.playerOneWins += 1
+            game.win = 1
+            playOneWins.innerHTML = `${game.playerOneWins} victoires`
+        } else if (score2 >= 100) {
+            game.playerTwoWins += 1
+            game.win = 2
+            playTwoWins.innerHTML = `${game.playerTwoWins} victoires`
+        }
+        if (game.win != false) {
+            alert(`Le joueur ${game.win} a gagné`)
+            score1 = 0 //On remet toutes les valeurs à 0 pour une nouvelle partie
+            score2 = 0
+            scoreboard1.innerHTML = 0
+            currentScore1 = 0
+            currentScoreboard1.innerHTML = 0
+            scoreboard2.innerHTML = 0
+            currentScore2 = 0
+            currentScoreboard2.innerHTML = 0
+            game.ongoing = false
+            game.player = 0
+            ctx.beginPath()
+            ctx.fillStyle = 'white'
+            ctx.fillRect(0, 0, 100, 100)
+            bgOne.classList.remove('bg-light')
+            bgTwo.classList.remove('bg-light')
+            ctxTurn.beginPath()
+            ctxTurn.fillStyle = 'white' 
+            ctxTurn.clearRect(0, 0, 150, 50)
+        }
+    }
 
     const dieRoll = () => { //Fonction renvoyant un entier de 1 à 6
         return Math.ceil(Math.random()*6)
     }
 
-    const rollCalc = (player) => {
+    const rollCalc = (player) => { //Le calcul du résultat et la création du dé
         ctx.beginPath()
         ctx.fillStyle = 'white'
         ctx.fillRect(0, 0, 100, 100) //On crée un nouveau dé vide
@@ -103,7 +143,7 @@ if (die.getContext && turnVisuals.getContext) {
                 hold.click() //Si le dé renvoie 1, c'est la fin du tour
             } else {
                 currentScore1 += die
-                currentScoreboard1.innerHTML = `${currentScore1}`
+                currentScoreboard1.innerHTML = `${currentScore1}` //Sinon, on ajoute le score
             }
         } else {
             if (die == 1) {
@@ -121,31 +161,35 @@ if (die.getContext && turnVisuals.getContext) {
         if (player == 1) {
             ctxTurn.beginPath()
             ctxTurn.fillStyle = 'white' 
-            ctxTurn.clearRect(0, 0, 150, 50)
+            ctxTurn.clearRect(0, 0, 150, 50) //On vide le panneau de tour
             ctxTurn.fillStyle = '#e35d6a'
-            ctxTurn.moveTo(20, 10)
-            ctxTurn.arc(10, 10, 10, 0, Math.PI*2)
+            ctxTurn.moveTo(22, 13)
+            ctxTurn.arc(12, 13, 10, 0, Math.PI*2) //On fait un cercle pour indiquer le tour
             ctxTurn.fill()
+            bgOne.classList.add('bg-light') //On met en place le bg-light sur la moitié appropriée
+            bgTwo.classList.remove('bg-light')
         } else {  
             ctxTurn.beginPath()          
             ctxTurn.fillStyle = 'white'
             ctxTurn.clearRect(0, 0, 150, 50)
             ctxTurn.fillStyle = '#e35d6a'
-            ctxTurn.moveTo(150, 10)
-            ctxTurn.arc(140, 10, 10, 0, Math.PI*2)
+            ctxTurn.moveTo(148, 13)
+            ctxTurn.arc(138, 13, 10, 0, Math.PI*2)
             ctxTurn.fill()
+            bgOne.classList.remove('bg-light')
+            bgTwo.classList.add('bg-light')
         }
     }
     
-    roll.addEventListener('click', () => {
-        if (ongoingGame) {
+    roll.addEventListener('click', () => { //Bouton jet de dé
+        if (game.ongoing) {
             rollCalc(game.player)
         }
     })
 
-    newGame.addEventListener('click', () => {
-        if (ongoingGame == false) {
-            ongoingGame = true
+    newGame.addEventListener('click', () => { //Fonction lançant le jeu
+        if (game.ongoing == false) {
+            game.ongoing = true
             score1 = 0
             score2 = 0
             scoreboard1.innerHTML = 0
@@ -157,12 +201,12 @@ if (die.getContext && turnVisuals.getContext) {
     })
 
     hold.addEventListener('click', () => {
-        if (ongoingGame) {
+        if (game.ongoing) {
             if (game.player == 1) {
                 score1 += currentScore1
                 scoreboard1.innerHTML = score1
                 currentScore1 = 0
-                currentScoreboard1.innerHTML = 0
+                currentScoreboard1.innerHTML = 0 //On met les scores en place
                 game.player = 2
             }
             else {
@@ -172,7 +216,8 @@ if (die.getContext && turnVisuals.getContext) {
                 currentScoreboard2.innerHTML = 0
                 game.player = 1
             }
-            turnVisual(game.player)
+            turnVisual(game.player) // On appelle la fonction pour indiquer à qui c'est le tour
+            winCheck()
         }
     })
 
