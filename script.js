@@ -11,6 +11,7 @@ const bgOne = document.getElementById('bgP1')
 const bgTwo = document.getElementById('bgP2')
 const playOneWins = document.getElementById('playerOneWins')
 const playTwoWins = document.getElementById('playerTwoWins') //Initialisation des éléments
+const bootstrap = require('bootstrap')
 
 let score1 = 0
 let score2 = 0
