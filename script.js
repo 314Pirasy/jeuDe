@@ -42,7 +42,7 @@ if (die.getContext && turnVisuals.getContext) {
             playTwoWins.innerHTML = `${game.playerTwoWins} victoires`
         }
         if (game.win != false) {
-            alert(`Le joueur ${game.win} a gagné`)
+            alarm(`Le joueur ${game.win} a gagné`)
             score1 = 0 //On remet toutes les valeurs à 0 pour une nouvelle partie
             score2 = 0
             scoreboard1.innerHTML = 0
@@ -68,13 +68,39 @@ if (die.getContext && turnVisuals.getContext) {
         return Math.ceil(Math.random()*6)
     }
 
+    const alarm = (message) => {
+        let divis = document.createElement('div')
+        divis.style.fontSize = '2rem'
+        divis.style.background = '#f8f9fa'
+        divis.style.boxShadow = '10px'
+        divis.style.border = '1px solid black'
+        divis.style.borderRadius = '10px'
+        divis.style.zIndex = '2'
+        divis.style.height = '40vh'
+        divis.style.width = '40vw'
+        divis.style.position = 'absolute'
+        divis.style.top = '25%'
+        divis.style.left = '30%'
+        divis.innerHTML = message
+
+        let btn = document.createElement('button')
+        btn.innerHTML = 'Fermer'
+        btn.style.border = '0'
+        btn.style.background = 'none'
+        btn.style.float = 'right'
+        divis.appendChild(btn)
+        btn.addEventListener('click', () => {
+            document.body.removeChild(divis)
+        })
+        document.body.appendChild(divis)
+    }
+
     const rollCalc = (player) => { //Le calcul du résultat et la création du dé
         ctx.beginPath()
         ctx.fillStyle = 'white'
         ctx.fillRect(0, 0, 100, 100) //On crée un nouveau dé vide
         ctx.fillStyle = '#e35d6a' 
         let die = dieRoll()
-        console.log(die)
         switch (die) { //En fonction du résultat du dé, on génère la face avec canvas
             case 1:
                 ctx.moveTo(60, 50)
@@ -194,7 +220,7 @@ if (die.getContext && turnVisuals.getContext) {
             score2 = 0
             scoreboard1.innerHTML = 0
             scoreboard2.innerHTML = 0
-            alert('La partie a commencé')
+            alarm('La partie a commencé')
             game.player = 1
             turnVisual(game.player)
         }
